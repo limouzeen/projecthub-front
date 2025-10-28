@@ -1,1 +1,65 @@
-/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* พื้นหลังรวม */
+html, body, app-root { height: 100%; }
+body { @apply bg-gradient-to-br from-slate-50 to-slate-100 text-slate-800; }
+
+
+/* ยูทิลของโปรเจกต์ ใช้ได้ถึงมีเส้นเหลือง */
+@layer components {
+  .glass {
+    @apply bg-white/60 backdrop-blur-md border border-white/30 shadow-xl rounded-2xl;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-5 py-3 rounded-xl font-medium
+           bg-primary text-white hover:opacity-90 transition active:scale-[0.99];
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center px-5 py-3 rounded-xl
+           border border-slate-200 bg-white text-slate-800 hover:bg-slate-50 shadow-sm;
+  }
+  .input {
+    @apply w-full rounded-xl border border-slate-200 bg-white/70 px-3 py-2
+           focus:outline-none focus:ring-2 focus:ring-primary/30;
+  }
+  .link { @apply text-primary hover:underline; }
+}
+
+/* ===== Animations ===== */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(60px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse-slow {
+  0%,100% { opacity: 0.3; transform: scale(1); }
+  50%     { opacity: 0.6; transform: scale(1.05); }
+}
+@keyframes glow {
+  0%,100% { box-shadow: 0 0 20px rgba(99,102,241,.2); }
+  50%     { box-shadow: 0 0 40px rgba(56,189,248,.3); }
+}
+.animate-fade-in   { animation: fade-in 1s ease-out forwards; }
+.animate-fade-up   { animation: fade-up 1.2s ease-out forwards; }
+.animate-slide-up  { animation: slide-up 1s ease-out forwards; }
+.animate-pulse-slow{ animation: pulse-slow 6s ease-in-out infinite; }
+.animate-glow      { animation: glow 5s ease-in-out infinite; }
+.delay-300 { animation-delay: .3s; }
+.delay-500 { animation-delay: .5s; }
+.delay-700 { animation-delay: .7s; }
+
+
+@keyframes float-y {
+  0%,100% { transform: translateY(0); }
+  50%     { transform: translateY(-8px); }
+}
+.animate-float { animation: float-y 6s ease-in-out infinite; }
