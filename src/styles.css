@@ -1,25 +1,62 @@
+/* === 1. Tailwind Directives === */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* พื้นหลังรวม */
-html, body, app-root { height: 100%; }
-body { @apply bg-gradient-to-br from-slate-50 to-slate-100 text-slate-800; }
+/* === 2. Global Base Styles (ปรับจากเดิม) === */
+html, body { 
+    height: 100%; 
+    /* กำหนด font-family ทั่วโลก ถ้าใช้ font ไทยสวยๆ */
+    /* font-family: 'Inter', 'Kanit', sans-serif; */
+}
+body { 
+    @apply bg-gradient-to-br from-slate-50 to-slate-100 text-slate-800; 
+}
 
 
-/* ยูทิลของโปรเจกต์ ใช้ได้ถึงมีเส้นเหลือง */
+/* === 3. Custom Components และ Enhancements (ลูกเล่นหลัก) === */
 @layer components {
+  /* คลาสเดิม: Glassmorphism พื้นฐาน */
   .glass {
     @apply bg-white/60 backdrop-blur-md border border-white/30 shadow-xl rounded-2xl;
   }
+
+  /* 💡 [NEW] คลาส Glassmorphism ที่เบามากสำหรับคอนเทนต์หลัก */
+  .glass-subtle {
+    /* ใช้ bg-white/40 แทน bg-white/60 เพื่อให้โปร่งใสมากขึ้น */
+    @apply bg-white/40 backdrop-blur-sm rounded-3xl p-6 transition-all duration-500
+           shadow-xl shadow-indigo-50/50; /* เพิ่มเงาสีอ่อนๆ */
+  }
+
+  /* คลาสเดิม: ปุ่มหลัก */
   .btn-primary {
     @apply inline-flex items-center justify-center px-5 py-3 rounded-xl font-medium
            bg-primary text-white hover:opacity-90 transition active:scale-[0.99];
   }
+  
+  /* 💡 [NEW] ปุ่มหลักที่เน้นมิติและแสง (สำหรับปุ่ม Register) */
+  .btn-primary-enhance {
+    @apply inline-flex items-center justify-center px-6 py-3.5 rounded-2xl font-semibold 
+           text-white transition-all duration-500 active:scale-[0.98] cursor-pointer
+           bg-gradient-to-r from-indigo-600 to-cyan-500 
+           shadow-xl shadow-indigo-300/60
+           hover:shadow-indigo-300/80 hover:scale-[1.01]; 
+  }
+
+  /* คลาสเดิม: ปุ่ม Ghost */
   .btn-ghost {
     @apply inline-flex items-center justify-center px-5 py-3 rounded-xl
            border border-slate-200 bg-white text-slate-800 hover:bg-slate-50 shadow-sm;
   }
+
+  /* 💡 [NEW] ปุ่มรองที่ดูโปร่งใสและมีเส้นขอบที่ชัดเจนขึ้น (สำหรับปุ่ม Login) */
+  .btn-ghost-enhance {
+    @apply inline-flex items-center justify-center px-6 py-3.5 rounded-2xl font-semibold 
+           border border-slate-200 bg-white/50 text-slate-800 transition-all duration-300
+           hover:bg-white/90 hover:border-indigo-300 backdrop-blur-sm shadow-md;
+  }
+
+  /* คลาสอื่นๆ */
   .input {
     @apply w-full rounded-xl border border-slate-200 bg-white/70 px-3 py-2
            focus:outline-none focus:ring-2 focus:ring-primary/30;
@@ -27,7 +64,10 @@ body { @apply bg-gradient-to-br from-slate-50 to-slate-100 text-slate-800; }
   .link { @apply text-primary hover:underline; }
 }
 
-/* ===== Animations ===== */
+
+/* === 4. Animations (CSS Keyframes) === */
+
+/* Fades & Slides */
 @keyframes fade-in {
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -40,6 +80,8 @@ body { @apply bg-gradient-to-br from-slate-50 to-slate-100 text-slate-800; }
   from { opacity: 0; transform: translateY(60px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+/* Pulses & Glows */
 @keyframes pulse-slow {
   0%,100% { opacity: 0.3; transform: scale(1); }
   50%     { opacity: 0.6; transform: scale(1.05); }
@@ -48,18 +90,74 @@ body { @apply bg-gradient-to-br from-slate-50 to-slate-100 text-slate-800; }
   0%,100% { box-shadow: 0 0 20px rgba(99,102,241,.2); }
   50%     { box-shadow: 0 0 40px rgba(56,189,248,.3); }
 }
+
+/* Float (สำหรับ Logo) */
+@keyframes float-y {
+  0%,100% { transform: translateY(0); }
+  50%     { transform: translateY(-8px); }
+}
+
+/* Sparkle (ประกายดาว) */
+@keyframes twinkle {
+  0%, 100% { opacity: 0; transform: scale(.6) rotate(0deg); }
+  50%      { opacity: 1; transform: scale(1)  rotate(15deg); }
+}
+
+/* === 5. Animation Classes === */
+
+/* Standard */
 .animate-fade-in   { animation: fade-in 1s ease-out forwards; }
 .animate-fade-up   { animation: fade-up 1.2s ease-out forwards; }
 .animate-slide-up  { animation: slide-up 1s ease-out forwards; }
 .animate-pulse-slow{ animation: pulse-slow 6s ease-in-out infinite; }
 .animate-glow      { animation: glow 5s ease-in-out infinite; }
+.animate-float     { animation: float-y 6s ease-in-out infinite; }
+
+/* Delays */
 .delay-300 { animation-delay: .3s; }
 .delay-500 { animation-delay: .5s; }
 .delay-700 { animation-delay: .7s; }
 
 
-@keyframes float-y {
-  0%,100% { transform: translateY(0); }
-  50%     { transform: translateY(-8px); }
+/* === 6. Sparkle & Tilt Styles (ลูกเล่นพิเศษ) === */
+
+/* Sparkle Base */
+.sparkle {
+  position: absolute;
+  width: 12px; height: 12px;
+  filter: drop-shadow(0 0 6px rgba(99,102,241,.45)); /* indigo glow */
+  animation: twinkle 2.4s ease-in-out infinite;
 }
-.animate-float { animation: float-y 6s ease-in-out infinite; }
+
+/* Sparkle Shape (รูป +) */
+.sparkle::before, .sparkle::after {
+  content: "";
+  position: absolute; left: 0; top: 50%;
+  width: 100%; height: 2px;
+  transform: translateY(-50%);
+  background: linear-gradient(to right, transparent, white, transparent);
+  border-radius: 999px;
+}
+.sparkle::after { transform: translateY(-50%) rotate(90deg); }
+
+/* Sparkle Sizes and Colors */
+.sparkle-sm { width: 8px;  height: 8px; }
+.sparkle-lg { width: 16px; height: 16px; }
+.spark-indigo { filter: drop-shadow(0 0 6px rgba(99,102,241,.55)); }
+.spark-cyan   { filter: drop-shadow(0 0 6px rgba(34,211,238,.55)); }
+.spark-slow   { animation-duration: 3.1s; }
+.spark-slower { animation-duration: 3.8s; }
+
+/* 💡 [NEW] Tilt Effect Base (ใช้สำหรับเตรียมการหมุน 3D) */
+.tilt-card {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out; /* เพิ่ม Transition */
+}
+
+/* 💡 [NEW] Tilt Effect on Hover (มิติภาพลวงตาเมื่อเม้าส์ผ่าน) */
+.tilt-card:hover {
+  /* หมุนเล็กน้อย และยกเงาขึ้น */
+  transform: rotateX(1deg) rotateY(1deg) scale(1.005);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+}
