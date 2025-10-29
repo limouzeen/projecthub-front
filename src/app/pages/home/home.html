@@ -1,118 +1,160 @@
 <section
-  class="min-h-screen flex flex-col items-center justify-center
-         px-6 md:px-10 py-2
-         overflow-hidden relative text-center"
+  class="min-h-[100svh] flex flex-col items-center justify-center px-6 md:px-10 pt-8 sm:pt-0 overflow-hidden relative text-center"
 >
-
-
   <!-- แสงพื้นหลัง -->
-  <div class="absolute -top-32 -left-32 w-[400px] h-[400px] bg-indigo-400/30 blur-[120px] rounded-full animate-pulse-slow"></div>
-  <div class="absolute bottom-0 right-0 w-[400px] h-[400px] bg-cyan-300/30 blur-[120px] rounded-full animate-pulse-slow delay-700"></div>
-
   <div
-    class="w-full max-w-3xl text-center relative z-10 animate-fade-in"
-  >
-    <!-- Logo -->
-   <!-- Logo -->
-<div
-  class="relative mx-auto w-full 
-         max-w-3xl lg:max-w-5xl 2xl:max-w-6xl
-         z-10 animate-fade-in
-         rounded-[2rem] overflow-hidden shadow-none bg-transparent -mt-20"
->
+    class="absolute -top-32 -left-32 w-[400px] h-[400px] bg-indigo-400/30 blur-[120px] rounded-full animate-pulse-slow"
+  ></div>
+  <div
+    class="absolute bottom-0 right-0 w-[400px] h-[400px] bg-cyan-300/30 blur-[120px] rounded-full animate-pulse-slow delay-700"
+  ></div>
 
+  <div class="w-full max-w-3xl text-center relative z-10 animate-fade-in">
+    <!-- Logo (ตัวเดียว, overflow-visible, isolate เพื่อเลเยอร์ออร่า) -->
+    <div
+      class="relative isolate mx-auto w-full max-w-3xl lg:max-w-5xl 2xl:max-w-6xl z-10 animate-fade-in overflow-visible bg-transparent -mt-6 sm:-mt-10 md:-mt-16 lg:-mt-20"
+    >
+      <!-- วงแหวนฟุ้งอยู่หลังโลโก้ -->
+      <!-- หมายเหตุ: aura-wrap เองมี position:absolute อยู่แล้ว ไม่ต้องใส่ inset-0 -->
+      <div class="aura-wrap pointer-events-none -z-10">
+        <div class="aura-ring aura-indigo"></div>
+        <div class="aura-ring aura-cyan"></div>
+        <div class="aura-ring aura-white"></div>
+      </div>
 
-  <!-- รูปโลโก้ -->
-  <img
-    src="/assets/h_logo.png"
-    alt="ProjectHub"
-    class="w-full mx-auto object-contain rounded-[2rem]
-           max-w-lg sm:max-w-2xl  lg:max-w-4xl  2xl:max-w-[1200px]
-           max-h-56 sm:max-h-72 lg:max-h-[28rem] 2xl:max-h-[36rem]
-           animate-float "
-  />
-  <!-- กลุ่มอนุภาคเรืองแสง -->
-  <div class="pointer-events-none absolute inset-0">
-    <!-- แถวบน -->
-    <span class="particle p-indigo"
-      style="--x:22%; --y:22%; --s:9px;  --t:16s; --f:3.2s;"></span>
-    <span class="particle p-cyan p-fast"
-      style="--x:78%; --y:18%; --s:7px;  --t:12s; --f:2.4s; --tx:-7%; --ty:3%;"></span>
-    <span class="particle p-white"
-      style="--x:46%; --y:15%; --s:6px;  --t:14s; --f:2.8s;"></span>
+      <!-- ดาวบนตัวการ์ตูน -->
+       <span
+        class="sparkle sparkle-sm spark-white absolute right-[48%] bottom-[50%] z-[5]"
+        style="animation-delay: 1s"
+      ></span>
 
-    <!-- กลาง -->
-    <span class="particle p-indigo p-slow"
-      style="--x:30%; --y:52%; --s:12px; --t:20s; --f:3.6s; --tx:5%;  --ty:-2%;"></span>
-    <span class="particle p-amber"
-      style="--x:64%; --y:48%; --s:10px; --t:17s; --f:2.6s;"></span>
-    <span class="particle p-cyan"
-      style="--x:52%; --y:58%; --s:8px;  --t:15s; --f:2.2s; --tx:-4%; --ty:6%;"></span>
+      <span
+        class="sparkle sparkle-sm spark-white absolute right-[55%] bottom-[45%] z-[5]"
+        style="animation-delay: 1.5s"
+      ></span>
+      <span
+        class="sparkle sparkle-sm spark-white absolute right-[47%] bottom-[46%] z-[5]"
+        style="animation-delay: 1.4s"
+      ></span>
+      <span
+        class="sparkle sparkle-sm spark-white absolute right-[50%] bottom-[41%] z-[5]"
+        style="animation-delay: 1.8s"
+      ></span>
 
-    <!-- ล่าง -->
-    <span class="particle p-white"
-      style="--x:38%; --y:78%; --s:7px;  --t:13s; --f:2.5s;"></span>
-    <span class="particle p-indigo p-fast"
-      style="--x:72%; --y:74%; --s:9px;  --t:11s; --f:2.1s; --tx:8%;  --ty:-6%;"></span>
-    <span class="particle p-cyan"
-      style="--x:18%; --y:68%; --s:6px;  --t:14s; --f:2.9s;"></span>
-  </div>
- 
-
-  <!-- ชั้นประกายดาว -->
-  <div class="pointer-events-none absolute inset-0 rounded-[2rem]">
-    <span class="sparkle sparkle-sm spark-indigo left-[12%] top-[18%]" style="animation-delay: 200ms;"></span>
-    <span class="sparkle spark-cyan right-[14%] top-[22%] spark-slow" style="animation-delay: 900ms;"></span>
-    <span class="sparkle sparkle-lg spark-indigo left-[22%] top-[48%]" style="animation-delay: 500ms;"></span>
-    <span class="sparkle spark-cyan right-[20%] top-[52%] spark-slower" style="animation-delay: 1200ms;"></span>
-    <span class="sparkle sparkle-sm spark-indigo left-[30%] bottom-[18%]" style="animation-delay: 150ms;"></span>
-    <span class="sparkle spark-cyan right-[28%] bottom-[20%]" style="animation-delay: 700ms;"></span>
-    <span class="sparkle spark-indigo left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" style="animation-delay: 1100ms;"></span>
-  </div>
-
-
-
-      <div
-        class="absolute inset-0 animate-glow pointer-events-none"
-      ></div>
+      <!-- รูปโลโก้ -->
+      <img
+        src="/assets/h_logo.png"
+        alt="ProjectHub"
+        class="relative z-10 w-full mx-auto object-contain rounded-[2rem] max-w-lg sm:max-w-2xl lg:max-w-4xl 2xl:max-w-[1200px] max-h-56 sm:max-h-72 lg:max-h-[28rem] 2xl:max-h-[36rem] animate-float"
+      />
     </div>
 
-    <!-- หัวเรื่อง -->
-    <div class=" -mt-5 space-y-4">
-      <h1
-  class="text-3xl sm:text-4xl lg:text-5xl 2xl:text-6xl font-extrabold tracking-tight text-slate-900 leading-tight animate-slide-up"
->
+    <!-- ชั้นประกายดาว -->
+    <div class="pointer-events-none absolute inset-0 rounded-[2rem]">
+      <span
+        class="sparkle sparkle-sm spark-indigo left-[12%] top-[18%]"
+        style="animation-delay: 200ms"
+      ></span>
+      <span
+        class="sparkle spark-cyan right-[14%] top-[22%] spark-slow"
+        style="animation-delay: 900ms"
+      ></span>
+      <span
+        class="sparkle sparkle-lg spark-indigo left-[22%] top-[48%]"
+        style="animation-delay: 500ms"
+      ></span>
+      <span
+        class="sparkle spark-cyan right-[20%] top-[52%] spark-slower"
+        style="animation-delay: 1200ms"
+      ></span>
+      <span
+        class="sparkle sparkle-sm spark-indigo left-[30%] bottom-[18%]"
+        style="animation-delay: 150ms"
+      ></span>
+      <span
+        class="sparkle spark-cyan right-[28%] bottom-[20%]"
+        style="animation-delay: 700ms"
+      ></span>
+      <span
+        class="sparkle spark-indigo left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+        style="animation-delay: 1100ms"
+      ></span>
+    </div>
 
+    <!-- กลุ่มอนุภาค/ประกาย -->
+    <div class="pointer-events-none absolute inset-0">
+      <span
+        class="particle p-indigo"
+        style="--x: 22%; --y: 22%; --s: 9px; --t: 16s; --f: 3.2s"
+      ></span>
+      <span
+        class="particle p-cyan p-fast"
+        style="--x: 78%; --y: 18%; --s: 7px; --t: 12s; --f: 2.4s; --tx: -7%; --ty: 3%"
+      ></span>
+      <span
+        class="particle p-white"
+        style="--x: 46%; --y: 15%; --s: 6px; --t: 14s; --f: 2.8s"
+      ></span>
+
+      <span
+        class="particle p-indigo p-slow"
+        style="--x: 30%; --y: 52%; --s: 12px; --t: 20s; --f: 3.6s; --tx: 5%; --ty: -2%"
+      ></span>
+      <span
+        class="particle p-amber"
+        style="--x: 64%; --y: 48%; --s: 10px; --t: 17s; --f: 2.6s"
+      ></span>
+      <span
+        class="particle p-cyan"
+        style="--x: 52%; --y: 58%; --s: 8px; --t: 15s; --f: 2.2s; --tx: -4%; --ty: 6%"
+      ></span>
+
+      <span
+        class="particle p-white"
+        style="--x: 38%; --y: 78%; --s: 7px; --t: 13s; --f: 2.5s"
+      ></span>
+      <span
+        class="particle p-indigo p-fast"
+        style="--x: 72%; --y: 74%; --s: 9px; --t: 11s; --f: 2.1s; --tx: 8%; --ty: -6%"
+      ></span>
+      <span
+        class="particle p-cyan"
+        style="--x: 18%; --y: 68%; --s: 6px; --t: 14s; --f: 2.9s"
+      ></span>
+    </div>
+
+    <!-- หัวเรื่อง + ปุ่ม -->
+    <div class="mt-0 space-y-4 relative z-20">
+      <h1
+        class="text-3xl sm:text-4xl lg:text-5xl 2xl:text-6xl font-extrabold tracking-tight text-slate-900 leading-tight animate-slide-up"
+      >
         Manage your
-        <span
-          class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-cyan-500"
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-cyan-500"
           >Projects</span
         >
         with style
       </h1>
-      <p
-        class="text-slate-600 text-base md:text-lg animate-fade-up delay-300"
-      >
+      <p class="text-slate-600 text-base md:text-lg animate-fade-up delay-300">
         <span class="font-medium text-slate-700">Create</span> +
-        <span class="font-medium text-slate-700">Your Own Projects</span> •
-        Minimal • Modern • Fast
+        <span class="font-medium text-slate-700">Your Own Projects</span> • Minimal • Modern • Fast
       </p>
-    </div>
 
-    <!-- ปุ่ม -->
-    <div
-  class="mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 lg:gap-8 xl:gap-10 justify-center animate-fade-up delay-500"
->
-  <a
-    routerLink="/login"
-    class="btn-ghost border-2 border-slate-200 hover:border-indigo-300 hover:bg-white/70 backdrop-blur-md transition-all duration-300 btn-wide"
-    >Login</a
-  >
-  <a
-    routerLink="/register"
-    class="btn-primary bg-gradient-to-r from-indigo-600 to-cyan-500 shadow-lg hover:shadow-indigo-300/40 hover:scale-[1.03] transition-transform duration-300 btn-wide"
-    >Register</a
-  >
-</div>
+      <div
+        class="mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 lg:gap-8 xl:gap-10 justify-center animate-fade-up delay-500"
+      >
+        <a
+          routerLink="/login"
+          class="btn-ghost border-2 border-slate-200 hover:border-indigo-300 hover:bg-white/70 backdrop-blur-md transition-all duration-300 btn-wide"
+        >
+          Login
+        </a>
+        <a
+          routerLink="/register"
+          class="btn-primary bg-gradient-to-r from-indigo-600 to-cyan-500 shadow-lg hover:shadow-indigo-300/40 hover:scale-[1.03] transition-transform duration-300 btn-wide"
+        >
+          Register
+        </a>
+      </div>
+    </div>
   </div>
 </section>
