@@ -1,0 +1,66 @@
+<section class="min-h-[100svh] flex flex-col gap-4">
+  <!-- Toolbar -->
+  <div class="sticky top-0 z-30 bg-white/70 backdrop-blur border-b border-white/40">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center gap-3">
+      <button class="p-2 rounded-lg hover:bg-slate-100" (click)="toggleAside()">
+        <!-- icon -->
+        <svg class="w-5 h-5 text-slate-700" viewBox="0 0 24 24" fill="none">
+          <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+
+      <img src="/assets/h_noname_logo.png" class="w-7 h-7 rounded-lg shadow mr-2" alt="">
+      <span class="font-semibold text-slate-900">ProjectHub</span>
+
+      <div class="ml-auto relative w-full max-w-md">
+        <input class="input"
+  [value]="keyword()"
+  (input)="keyword.set(($any($event.target)).value)"
+  placeholder="Search projects..." />
+
+      </div>
+
+      <button class="ml-2 px-3 py-2 rounded-lg bg-indigo-600 text-white hover:opacity-90"
+              (click)="addQuick('New Project')">+ New Project</button>
+      <button class="px-3 py-2 rounded-lg bg-emerald-600 text-white hover:opacity-90"
+              (click)="exportCSV()">Export</button>
+      <button class="px-3 py-2 rounded-lg bg-rose-600 text-white hover:opacity-90"
+              (click)="removeManySelected()">Delete Selected</button>
+    </div>
+  </div>
+
+  <div class="max-w-6xl mx-auto px-4 w-full space-y-3">
+    @if (filtered().length === 0) {
+      <div class="text-slate-500 text-sm p-6">No projects found.</div>
+    } @else {
+      @for (p of filtered(); track p.id) {
+        <div class="bg-white/80 backdrop-blur border border-white/30 rounded-xl px-4 py-3 flex items-center gap-3">
+          <input type="checkbox"
+  [checked]="isChecked(p.id)"
+  (change)="toggleCheck(p.id, ($any($event.target)).checked)" />
+
+
+          <div class="flex-1">
+            <div class="font-medium text-slate-900">{{ p.name }}</div>
+            <div class="text-xs text-slate-500">
+              Last modified: {{ p.updatedAt | date:'mediumDate' }} • {{ p.tables }} tables
+            </div>
+          </div>
+
+          <button class="p-2 rounded-lg hover:bg-slate-100" title="Favorite"
+                  (click)="toggleFavorite(p.id)">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"
+                 [attr.fill]="p.favorite ? 'currentColor' : 'none'"
+                 [attr.stroke]="p.favorite ? 'currentColor' : 'currentColor'">
+              <path d="M12 17.3l-6.2 3.3 1.2-6.7L2 8.9l6.9-1 3.1-6.2 3.1 6.2 6.9 1-5 5 1.2 6.7z"
+                    stroke-width="2"></path>
+            </svg>
+          </button>
+
+          <button class="px-3 py-1.5 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100"
+                  (click)="removeOne(p.id)">Delete</button>
+        </div>
+      }
+    }
+  </div>
+</section>
