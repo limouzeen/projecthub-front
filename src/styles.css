@@ -4,14 +4,28 @@
 @tailwind utilities;
 
 /* === 2. Global Base Styles (ปรับจากเดิม) === */
-html, body { 
-    height: 100%; 
-    /* กำหนด font-family ทั่วโลก ถ้าใช้ font ไทยสวยๆ */
-    /* font-family: 'Inter', 'Kanit', sans-serif; */
+/* พื้นหลังรวมทั้งหน้า */
+html, body {
+  @apply min-h-screen overflow-x-hidden
+         bg-gradient-to-br from-slate-50 via-indigo-50 to-blue-100
+         bg-fixed;                         /* <-- เพิ่มอันนี้ */
 }
-body { 
-    @apply bg-gradient-to-br from-slate-50 to-slate-100 text-slate-800; 
+body { @apply text-slate-800; }
+
+/* Global sunset haze (ป้องกันรอยต่อ) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(80rem 80rem at 82% 85%, rgba(34,211,238,.18), transparent 60%),
+    radial-gradient(70rem 70rem at 40% 92%, rgba(251,146,60,.16), transparent 60%),
+    radial-gradient(70rem 70rem at 12% -8%,  rgba(99,102,241,.16), transparent 60%);
+  filter: blur(0.2px);
 }
+
 
 
 /* === 3. Custom Components และ Enhancements (ลูกเล่นหลัก) === */
