@@ -1,6 +1,6 @@
 <section
   class="min-h-screen flex flex-col items-center justify-center
-         px-6 md:px-10 py-2 md:py-20
+         px-6 md:px-10 py-2
          overflow-hidden relative text-center"
 >
 
@@ -18,7 +18,7 @@
   class="relative mx-auto w-full 
          max-w-3xl lg:max-w-5xl 2xl:max-w-6xl
          z-10 animate-fade-in
-         rounded-[2rem] overflow-hidden shadow-none bg-transparent"
+         rounded-[2rem] overflow-hidden shadow-none bg-transparent -mt-20"
 >
 
 
@@ -27,11 +27,36 @@
     src="/assets/h_logo.png"
     alt="ProjectHub"
     class="w-full mx-auto object-contain rounded-[2rem]
-           max-w-lg sm:max-w-2xl lg:max-w-4xl 2xl:max-w-[1200px]
+           max-w-lg sm:max-w-2xl  lg:max-w-4xl  2xl:max-w-[1200px]
            max-h-56 sm:max-h-72 lg:max-h-[28rem] 2xl:max-h-[36rem]
-           animate-float"
+           animate-float "
   />
+  <!-- กลุ่มอนุภาคเรืองแสง -->
+  <div class="pointer-events-none absolute inset-0">
+    <!-- แถวบน -->
+    <span class="particle p-indigo"
+      style="--x:22%; --y:22%; --s:9px;  --t:16s; --f:3.2s;"></span>
+    <span class="particle p-cyan p-fast"
+      style="--x:78%; --y:18%; --s:7px;  --t:12s; --f:2.4s; --tx:-7%; --ty:3%;"></span>
+    <span class="particle p-white"
+      style="--x:46%; --y:15%; --s:6px;  --t:14s; --f:2.8s;"></span>
 
+    <!-- กลาง -->
+    <span class="particle p-indigo p-slow"
+      style="--x:30%; --y:52%; --s:12px; --t:20s; --f:3.6s; --tx:5%;  --ty:-2%;"></span>
+    <span class="particle p-amber"
+      style="--x:64%; --y:48%; --s:10px; --t:17s; --f:2.6s;"></span>
+    <span class="particle p-cyan"
+      style="--x:52%; --y:58%; --s:8px;  --t:15s; --f:2.2s; --tx:-4%; --ty:6%;"></span>
+
+    <!-- ล่าง -->
+    <span class="particle p-white"
+      style="--x:38%; --y:78%; --s:7px;  --t:13s; --f:2.5s;"></span>
+    <span class="particle p-indigo p-fast"
+      style="--x:72%; --y:74%; --s:9px;  --t:11s; --f:2.1s; --tx:8%;  --ty:-6%;"></span>
+    <span class="particle p-cyan"
+      style="--x:18%; --y:68%; --s:6px;  --t:14s; --f:2.9s;"></span>
+  </div>
  
 
   <!-- ชั้นประกายดาว -->
@@ -68,24 +93,24 @@
       <p
         class="text-slate-600 text-base md:text-lg animate-fade-up delay-300"
       >
-        <span class="font-medium text-slate-700">Angular</span> +
-        <span class="font-medium text-slate-700">Tailwind v3</span> •
+        <span class="font-medium text-slate-700">Create</span> +
+        <span class="font-medium text-slate-700">Your Own Projects</span> •
         Minimal • Modern • Fast
       </p>
     </div>
 
     <!-- ปุ่ม -->
     <div
-  class="mt-10 flex flex-col sm:flex-row gap-4 justify-center animate-fade-up delay-500"
+  class="mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 lg:gap-8 xl:gap-10 justify-center animate-fade-up delay-500"
 >
   <a
     routerLink="/login"
-    class="btn-ghost border-2 border-slate-200 hover:border-indigo-300 hover:bg-white/70 backdrop-blur-md transition-all duration-300 "
+    class="btn-ghost border-2 border-slate-200 hover:border-indigo-300 hover:bg-white/70 backdrop-blur-md transition-all duration-300 btn-wide"
     >Login</a
   >
   <a
     routerLink="/register"
-    class="btn-primary bg-gradient-to-r from-indigo-600 to-cyan-500 shadow-lg hover:shadow-indigo-300/40 hover:scale-[1.03] transition-transform duration-300 "
+    class="btn-primary bg-gradient-to-r from-indigo-600 to-cyan-500 shadow-lg hover:shadow-indigo-300/40 hover:scale-[1.03] transition-transform duration-300 btn-wide"
     >Register</a
   >
 </div>
