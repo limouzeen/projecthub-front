@@ -22,37 +22,78 @@
       <img src="/assets/h_noname_logo.png" class="w-7 h-7 rounded-lg shadow mr-2" alt="" />
       <span class="font-semibold text-slate-900">ProjectHub</span>
 
+
+      <!-- Search Box -->
+
       <div class="ml-auto relative w-full max-w-md">
-        <input
-          class="input"
-          [value]="keyword()"
-          (input)="keyword.set($any($event.target).value)"
-          placeholder="Search projects..."
+  <label for="search" class="sr-only">Search</label>
+
+  <!--ไอคอนอยู่ซ้ายในกล่อง -->
+  <svg
+    class="absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5
+           text-slate-400 pointer-events-none"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+    aria-hidden="true"
+  >
+    <path stroke-linecap="round" stroke-linejoin="round"
+          d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z"/>
+  </svg>
+
+  <input
+    id="search"
+    class="input !pl-10 sm:!pl-12 !pr-3 min-h-[42px] w-full"
+    [value]="keyword()"
+    (input)="keyword.set($any($event.target).value)"
+    placeholder="Search projects..."
+  />
+</div>
+
+      <!-- แสดงรูปภาพโปรไฟล์และชื่อของผู้ใช้งานด้านหลัง Nav bar -->
+      <div class="ml-4 flex items-center gap-2 pl-2">
+        <span class="text-sm font-semibold text-slate-900">Amarat K.</span>
+        <img
+          src="/assets/ph_profile.png"
+          alt=""
+          class="w-8 h-8 rounded-full ring-1 ring-white/60"
         />
       </div>
-
-      <button
-        class="ml-2 px-3 py-2 rounded-lg bg-indigo-600 text-white hover:opacity-90"
-        (click)="addQuick('New Project')"
-      >
-        + New Project
-      </button>
-      <button
-        class="px-3 py-2 rounded-lg bg-emerald-600 text-white hover:opacity-90"
-        (click)="exportCSV()"
-      >
-        Export
-      </button>
-      <button
-        class="px-3 py-2 rounded-lg bg-rose-600 text-white hover:opacity-90"
-        (click)="removeManySelected()"
-      >
-        Delete Selected
-      </button>
     </div>
   </div>
 
-  <!-- Overlay (แทรกเพิ่ม) -->
+
+
+<!-- Actions bar (มินิมอล) -->
+<div class="max-w-6xl mx-auto w-full px-4 pt-10">
+  <div class="flex items-center gap-2">
+    <!-- New Project = ปุ่มหลักแบบ gradient -->
+    <button
+      class="btn-primary-enhance"
+      (click)="addQuick('New Project')"
+    >
+      New Project
+    </button>
+
+    <!-- Delete Project = ปุ่มอ่อน โทน danger ให้เข้าธีม -->
+    <button
+      class="btn-ghost-enhance text-rose-600 border-rose-200 hover:bg-rose-50 hover:border-rose-300"
+      (click)="removeManySelected()"
+    >
+      Delete Project
+    </button>
+
+    <!-- Export = ปุ่มรองโทน ghost ของธีม -->
+    <button
+      class="btn-ghost-enhance"
+      (click)="exportCSV()"
+    >
+      Export
+    </button>
+  </div>
+</div>
+
+
+  <!-- Overlay -->
   <div
     class="fixed inset-0 z-40 bg-black/40 transition-opacity duration-300"
     [class.opacity-0]="!asideOpen()"
@@ -63,13 +104,18 @@
   <!-- Drawer / Aside (แทรกเพิ่ม) -->
   <aside
     id="app-aside"
-    class="fixed left-0 top-0 bottom-0 z-50 w-80 max-w-[85vw] glass-subtle border border-white/40 backdrop-blur-lg transition-transform duration-300 ease-out flex flex-col -translate-x-full"
+    class=" fixed left-0 top-0 bottom-0 z-50 w-80 max-w-[85vw] glass-subtle border border-white/40 backdrop-blur-lg transition-transform duration-300 ease-out flex flex-col -translate-x-full"
     [class.translate-x-0]="asideOpen()"
     role="dialog"
     aria-label="Sidebar"
   >
-    <!-- ใส่ไอเท็มเมนูได้ตามต้องการ -->
-    <div class="px-4 py-3 flex items-center gap-2 border-b border-white/40">
+
+    <!-- แถบสีซ้าย -->
+  <span class="aside-accent" aria-hidden="true"></span>
+
+
+    <!-- เมนู -->
+    <div class=" px-4 py-3 flex items-center gap-2 border-b border-white/40">
       <img src="/assets/h_noname_logo.png" class="w-6 h-6 rounded-lg" alt="" />
       <div class="font-semibold">Menu</div>
       <button
@@ -87,16 +133,19 @@
         </svg>
       </button>
     </div>
+
+    <!-- รายการไอเท็มที่แสดงบนแถบด้านซ้าย -->
     <nav class="p-3 space-y-1 text-sm">
       <a routerLink="/dashboard" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Dashboard</a>
       <a routerLink="/projects" class="block px-3 py-2 rounded-lg hover:bg-slate-100"
-        >Edit Profile</a
+        >Recently Used</a
       >
-      <a routerLink="/settings" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Settings</a>
-      <a routerLink="/settings" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Logout</a>
+      <a routerLink="/settings" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Favorite Project</a>
     </nav>
+
     <div class="mt-auto p-3 text-xs text-slate-500">© ProjectHub</div>
   </aside>
+
 
   <!-- คอนเทนต์รายการ -->
   <div class="max-w-6xl mx-auto px-4 w-full space-y-3">
@@ -120,6 +169,9 @@
         </div>
       </div>
 
+
+
+      <!-- ปุ่ม favorite project -->
       <button
         class="p-2 rounded-lg hover:bg-slate-100"
         title="Favorite"
@@ -160,7 +212,6 @@
           </svg>
         </button>
 
-
         <!-- click kebab เปิดดู menu -->
 
         @if (menuOpenId() === p.id) {
@@ -189,8 +240,6 @@
           </button>
         </div>
         }
-
-
       </div>
     </div>
     } }
