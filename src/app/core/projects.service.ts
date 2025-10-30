@@ -59,4 +59,10 @@ export class ProjectsService {
     const needs = /[" ,\n]/.test(s);
     return needs ? `"${s.replace(/"/g, '""')}"` : s;
   }
+
+  rename(id: string, name: string) {
+  this._list.update(arr =>
+    arr.map(p => (p.id === id ? { ...p, name, updatedAt: new Date().toISOString() } : p))
+  );
+}
 }

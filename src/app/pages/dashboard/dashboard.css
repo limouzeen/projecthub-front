@@ -2,3 +2,6 @@
 .glass-subtle { background: rgba(255,255,255,.55); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,.35); box-shadow: 0 10px 30px rgba(17,24,39,.06); }
 .input { background: rgba(255,255,255,.9); border: 1px solid rgba(226,232,240,1); border-radius: .75rem; padding: .5rem .75rem; outline: none; }
 .input:focus { box-shadow: 0 0 0 3px rgba(99,102,241,.15); border-color: rgb(165,180,252); }
+
+/* ให้การ์ดใน aside เนียนขึ้น (ออปชัน) */
+aside.glass-subtle { box-shadow: 0 20px 50px rgba(30,41,59,.12); }
