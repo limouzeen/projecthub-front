@@ -1,5 +1,5 @@
 // src/app/pages/dashboard/dashboard.ts
-import { Component, effect, signal, computed, HostListener } from '@angular/core'; // ← มี HostListener แล้ว
+import { Component, effect, signal, computed, HostListener } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { ProjectsService, Project } from '../../core/projects.service';
@@ -12,15 +12,19 @@ import { ProjectsService, Project } from '../../core/projects.service';
   styleUrl: './dashboard.css',
 })
 export class Dashboard {
-  keyword = signal('');
-  selected = signal<Set<string>>(new Set());
-  asideOpen = signal(false);
+  // ====== state หลัก ======
+  keyword    = signal('');
+  selected   = signal<Set<string>>(new Set());
+  asideOpen  = signal(false);
 
-  // ✅ เมนู 3 จุด: เก็บว่าเมนูของโปรเจกต์ไหนกำลังเปิด
+  // เมนู 3 จุด (จำว่าเมนูของโปรเจกต์ไหนเปิดอยู่)
   menuOpenId = signal<string | null>(null);
 
-  projects = signal<Project[]>([]);
+  // เมนูโปรไฟล์ (มุมขวาบน)
+  profileOpen = signal(false);
 
+  // ข้อมูลโปรเจกต์
+  projects = signal<Project[]>([]);
   filtered = computed(() => {
     const q = this.keyword().trim().toLowerCase();
     const list = this.projects();
@@ -31,7 +35,7 @@ export class Dashboard {
     effect(() => this.projects.set(this.svc.list()));
   }
 
-  /** แฮมเบอร์เกอร์: เปิด/ปิด aside + ล็อกสกอร์ล */
+  // ====== Aside (แฮมเบอร์เกอร์) ======
   toggleAside() {
     const next = !this.asideOpen();
     this.asideOpen.set(next);
@@ -40,50 +44,65 @@ export class Dashboard {
     }
   }
 
-  /** กด ESC: ปิดเมนู 3 จุดก่อน ถ้ายังมีให้ปิด aside ต่อ */
+  // ====== จัดการคลิกนอก/กด ESC (รวมศูนย์) ======
+
+  /** คลิกที่เอกสาร: ปิดทุกเมนูที่เปิดอยู่ */
+  @HostListener('document:click')
+  onDocClick() {
+    if (this.menuOpenId() !== null) this.menuOpenId.set(null);
+    if (this.profileOpen())       this.profileOpen.set(false);
+  }
+
+  /** กด ESC: ปิดโปรไฟล์ก่อน > เมนู 3 จุด > aside */
   @HostListener('document:keydown.escape')
   onEsc() {
-    if (this.menuOpenId()) {
-      this.menuOpenId.set(null);
-      return;
-    }
+    if (this.profileOpen())        { this.profileOpen.set(false); return; }
+    if (this.menuOpenId() !== null){ this.menuOpenId.set(null);   return; }
     if (this.asideOpen()) {
       this.asideOpen.set(false);
       if (typeof document !== 'undefined') document.body.style.overflow = '';
     }
   }
 
-  /** คลิกที่ใด ๆ บนเอกสาร: ปิดเมนู 3 จุดถ้าเปิดอยู่ */
-  @HostListener('document:click')
-  onDocClick() {
-    if (this.menuOpenId()) this.menuOpenId.set(null);
-  }
-
-  /** ===== เมนู 3 จุด: เมธอดที่ใช้ใน template ===== */
+  // ====== เมนู 3 จุด (ต่อท้ายการ์ดโปรเจกต์) ======
   toggleMenu(id: string) {
     this.menuOpenId.update(cur => (cur === id ? null : id));
   }
-  closeMenu() {
-    this.menuOpenId.set(null);
-  }
+  closeMenu() { this.menuOpenId.set(null); }
+
   openProject(id: string) {
-    // ถ้ามี Router แล้วค่อย navigate: this.router.navigate(['/projects', id]);
     console.log('open project', id);
     this.closeMenu();
   }
+
   renameProject(id: string, currentName: string) {
     const next = window.prompt('Rename project:', currentName?.trim() ?? '');
     if (next != null) {
       const name = next.trim();
-      if (name && name !== currentName) {
-        this.svc.rename(id, name); // ⚠️ ต้องมีเมธอด rename ใน ProjectsService (ดูหมายเหตุ)
-      }
+      if (name && name !== currentName) this.svc.rename(id, name);
     }
     this.closeMenu();
   }
-  /** =========================================== */
 
-  // ==== ด้านล่างคงเดิมทั้งหมด ====
+  // ====== เมนูโปรไฟล์ (มุมขวาบน navbar) ======
+  toggleProfileMenu() {
+    // ถ้าเมนู 3 จุดเปิดอยู่ ให้ปิดก่อน
+    if (this.menuOpenId() !== null) this.menuOpenId.set(null);
+    // toggle โปรไฟล์
+    this.profileOpen.update(v => !v);
+  }
+
+  onEditProfile() {
+    this.profileOpen.set(false);
+    // this.router.navigateByUrl('/profile/edit');
+  }
+
+  onLogout() {
+    this.profileOpen.set(false);
+    // this.auth.logout();
+  }
+
+  // ====== อื่น ๆ คงเดิม ======
   addQuick(name: string) {
     if (!name.trim()) return;
     this.svc.add(name.trim());
@@ -107,6 +126,6 @@ export class Dashboard {
   }
 
   toggleFavorite(id: string) { this.svc.toggleFavorite(id); }
-  exportCSV() { this.svc.downloadCSV(this.filtered()); }
-  toLocal(iso: string) { return new Date(iso).toLocaleDateString(); }
+  exportCSV()               { this.svc.downloadCSV(this.filtered()); }
+  toLocal(iso: string)      { return new Date(iso).toLocaleDateString(); }
 }
