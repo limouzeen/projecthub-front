@@ -1,0 +1,202 @@
+<section class="min-h-[100svh] flex flex-col items-center justify-center px-4 py-10 relative">
+  <!-- ปุ่ม Back -->
+   <a routerLink="/"
+     class="absolute left-6 top-6 inline-flex items-center gap-2 rounded-full bg-white/70 backdrop-blur-md
+            border border-white/30 shadow-md px-3 py-1.5 text-slate-700 hover:scale-105 transition">
+    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Back
+  </a>
+
+
+ <div class="w-full max-w-md relative z-10 animate-fade-in"></div>
+
+      <!-- โลโก้ + ชื่อ -->
+    <div class="flex items-center justify-center mb-6">
+      <img src="/assets/h_noname_logo.png" alt="ProjectHub"
+           class="w-14 h-14 rounded-xl shadow-md mr-3 animate-float object-cover" />
+      <div class="text-left">
+        <div class="text-xl font-bold text-slate-900 leading-tight">Edit Profile</div>
+        <div class="text-xs text-slate-500 -mt-0.5">Manage your Profile & Password</div>
+      </div>
+    </div>
+
+
+
+  <!-- Card -->
+ 
+<div class="glass max-w-xl w-full p-6 sm:p-8 rounded-3xl relative">
+ 
+  <!-- โซน Avatar -->
+  <div class="flex items-center gap-4 mb-8">
+    <div class="relative">
+     @if (model().avatarPreview) {
+  <img
+    [src]="model().avatarPreview!"
+    class="w-20 h-20 rounded-full ring-2 ring-white/70 object-cover shadow-sm"
+    alt="avatar" />
+} @else {
+  <img src="/assets/ph_profile.png"
+     class="relative w-20 h-20 rounded-full object-cover shadow-md
+            ring-5 ring-offset-[2px] ring-offset-white/10 ring-white/70 group-hover:ring-cyan-300/70 transition-all duration-500" />
+
+}
+
+
+      <!-- ปุ่มอัปโหลด -->
+      <label class="absolute -bottom-1 -right-1 cursor-pointer">
+        <input type="file" accept="image/*" class="hidden" (change)="onPickAvatar($event)" />
+        <span
+          class="inline-flex items-center justify-center w-6 h-6 rounded-full
+                 bg-gradient-to-r from-indigo-600 to-cyan-500 text-white shadow-xl hover:scale-105 transition">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+        </span>
+      </label>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <button class="btn-ghost-enhance !px-4 !py-2" (click)="removeAvatar()" type="button">
+        Remove photo
+      </button>
+      <div class="text-xs text-slate-500">PNG/JPG/WEBP up to 2MB</div>
+    </div>
+  </div>
+
+  <!-- ฟอร์ม (อินพุตสไตล์เดียวกับ Register: .input + label เล็ก) -->
+  <form class="space-y-5">
+    <div>
+      <label class="text-sm text-slate-600">Display name</label>
+      <input
+        class="input mt-1"
+        [value]="model().displayName"
+        (input)="onText('displayName', $event)"
+        placeholder="Your name" />
+    </div>
+
+    <div>
+      <label class="text-sm text-slate-600">Email</label>
+      <input
+        class="input mt-1" type="email"
+        [value]="model().email"
+        (input)="onText('email', $event)"
+        placeholder="you@example.com" />
+    </div>
+
+
+
+
+<!-- Current password -->
+<div>
+  <label class="text-sm text-slate-600">Current password</label>
+
+  <div class="relative">
+    <input
+      class="input mt-1 pr-12"
+      [type]="showPw() ? 'text' : 'password'"
+      [value]="model().currentPassword"
+      (input)="onText('currentPassword', $event)"
+      [placeholder]="showPw() ? 'Current password' : '••••••••'"
+      autocomplete="current-password"
+      autocapitalize="off"
+      spellcheck="false" />
+
+    <!-- ปุ่มตาแบบกลืน ไม่มีวงตอนคลิก -->
+    <button
+      type="button"
+      (click)="toggleShowPw()"
+      class="absolute inset-y-0 right-2 my-[6px] p-2 rounded-full
+             text-slate-500/80 hover:text-slate-700
+             hover:bg-white/55 backdrop-blur-md
+             transition active:scale-95 focus:outline-none select-none"
+      [attr.aria-pressed]="showPw()"
+      [title]="showPw() ? 'Hide password' : 'Show password'">
+
+      @if (showPw()) {
+        <!-- eye-off -->
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20C5 20 2 12 2 12a19.7 19.7 0 0 1 4.17-5.17"/>
+          <path d="M10.58 10.58a3 3 0 1 0 4.24 4.24"/>
+          <path d="M1 1l22 22"/>
+        </svg>
+      } @else {
+        <!-- eye -->
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+      }
+    </button>
+  </div>
+</div>
+
+    <div class="grid sm:grid-cols-2 gap-4">
+      <div>
+        <label class="text-sm text-slate-600">New password</label>
+        
+        <input
+          class="input mt-1"
+          [type]="showPw() ? 'text' : 'password'"
+          [value]="model().newPassword"
+          (input)="onText('newPassword', $event)"
+          placeholder="At least 8 characters" />
+
+        <!-- แถบความแข็งแรง -->
+        <div class="mt-2 h-2 rounded-full bg-slate-200 overflow-hidden">
+          <div class="h-full transition-all"
+               [style.width.%]="(strength() / 5) * 100"
+               [class]="{
+                 'bg-rose-400'  : strength() <= 1,
+                 'bg-amber-400' : strength() === 2,
+                 'bg-yellow-400': strength() === 3,
+                 'bg-lime-500'  : strength() === 4,
+                 'bg-emerald-500': strength() >= 5
+               }">
+          </div>
+        </div>
+        <div class="text-xs text-slate-500 mt-1">{{ strengthLabel() }}</div>
+      </div>
+
+      <div>
+        <label class="text-sm text-slate-600">Confirm new password</label>
+        <input
+          class="input mt-1"
+          [type]="showPw() ? 'text' : 'password'"
+          [value]="model().confirmNewPassword"
+          (input)="onText('confirmNewPassword', $event)"
+          placeholder="Re-enter new password" />
+      </div>
+    </div>
+
+    <!-- แจ้งเตือน -->
+    @if (msg()) {
+  <div class="rounded-xl bg-white/70 border border-slate-200 px-4 py-2 text-sm text-slate-700">
+    {{ msg() }}
+  </div>
+}
+
+   <!-- ปุ่ม -->
+<div class="pt-2">
+  <div class="flex flex-col sm:flex-row gap-3 justify-end items-stretch sm:items-end">
+    <button
+      class="btn-primary-enhance w-full sm:w-auto"
+      [disabled]="saving()"
+      type="button"
+      (click)="save()">
+      @if (!saving()) { <span>Save changes</span> } @else { <span>Saving...</span> }
+    </button>
+
+    <a class="btn-ghost-enhance w-full sm:w-auto text-center">
+      Cancel
+    </a>
+  </div>
+</div>
+
+  </form>
+</div>
+
+  
+</section>

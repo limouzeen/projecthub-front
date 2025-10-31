@@ -13,6 +13,14 @@ export const routes: Routes = [
     path: 'register',
     loadComponent: () => import('./pages/auth/register/register').then((m) => m.Register),
   },
-   { path: 'dashboard', loadComponent: () => import('./pages/dashboard/dashboard').then(m => m.Dashboard) },
+  {
+    path: 'dashboard',
+    loadComponent: () => import('./pages/dashboard/dashboard').then((m) => m.Dashboard),
+  },
+  {
+    path: 'profile/edit',
+    loadComponent: () => import('./pages/edit-profile/edit-profile').then((m) => m.EditProfile),
+  },
+
   { path: '**', redirectTo: '' },
 ];

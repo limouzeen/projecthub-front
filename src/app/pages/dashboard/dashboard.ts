@@ -182,8 +182,8 @@ ngOnDestroy() {
   }
 
   onEditProfile() {
-    this.profileOpen.set(false);
-    // this.router.navigateByUrl('/profile/edit');
+    // this.profileOpen.set(false);
+    this.router.navigateByUrl('/profile/edit');
   }
 
   onLogout() {
