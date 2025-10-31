@@ -1,10 +1,9 @@
-// src/app/core/projects.service.ts
 import { Injectable, signal, computed } from '@angular/core';
 
 export type Project = {
   id: string;
   name: string;
-  updatedAt: string; // ISO
+  updatedAt: string; 
   tables: number;
   favorite?: boolean;
 };

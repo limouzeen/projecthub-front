@@ -1,8 +1,6 @@
-footer {
-  animation: fadeIn 1s ease-in-out;
+.footer-pill { transition: all .25s ease; }
+.footer-pill.is-compact {
+  margin-left: auto; margin-right: 1rem;
+  border-radius: 9999px; padding: .375rem .5rem; gap: 0;
 }
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+.footer-pill.is-compact .footer-text { display: none; }
