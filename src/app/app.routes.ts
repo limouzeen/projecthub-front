@@ -21,6 +21,23 @@ export const routes: Routes = [
     path: 'profile/edit',
     loadComponent: () => import('./pages/edit-profile/edit-profile').then((m) => m.EditProfile),
   },
+  {
+    path: 'projects/:projectId',
+    loadComponent: () =>
+      import('./pages/project-detail/project-detail').then((m) => m.ProjectDetail),
+  },
+  { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
+  { path: '**', redirectTo: 'dashboard' },
 
-  { path: '**', redirectTo: '' },
+  // หน้า Table Detail (ขยายดูตารางเต็ม)
+  // {
+  //   path: 'projects/:projectId/tables/:tableId',
+  //   loadComponent: () => import('./pages/table-detail/table-detail').then(m => m.TableDetail),
+  // },
+
+  // Fallback 404
+  // {
+  //   path: '**',
+  //   loadComponent: () => import('./pages/not-found/not-found').then(m => m.NotFound),
+  // },
 ];

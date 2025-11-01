@@ -1,44 +1,46 @@
 import { Injectable, signal, computed } from '@angular/core';
 
 export type Project = {
-  id: string;
+  id: number;                 // <-- number แทน string
   name: string;
-  updatedAt: string; 
+  updatedAt: string;          // ISO
   tables: number;
   favorite?: boolean;
 };
 
 @Injectable({ providedIn: 'root' })
 export class ProjectsService {
+  // simple auto-increment id for mock
+  private seq = 1003;
+
   private readonly _list = signal<Project[]>([
-    { id: crypto.randomUUID(), name: 'Marketing Campaign 2025', updatedAt: new Date().toISOString(), tables: 15, favorite: true },
-    { id: crypto.randomUUID(), name: 'Sales Analytics',          updatedAt: new Date().toISOString(), tables: 8,  favorite: false },
+    { id: 1001, name: 'Marketing Campaign 2025', updatedAt: new Date().toISOString(), tables: 15, favorite: true },
+    { id: 1002, name: 'Sales Analytics',          updatedAt: new Date().toISOString(), tables:  8, favorite: false },
   ]);
 
-  /** signal ที่ให้อ่านได้จาก component */
+  /** expose read-only signal */
   readonly list = computed(() => this._list());
 
   add(name: string) {
-    const p: Project = { id: crypto.randomUUID(), name, updatedAt: new Date().toISOString(), tables: 0, favorite: false };
+    const p: Project = { id: this.seq++, name, updatedAt: new Date().toISOString(), tables: 0, favorite: false };
     this._list.update(arr => [p, ...arr]);
   }
 
-  remove(id: string) {
+  remove(id: number) {
     this._list.update(arr => arr.filter(p => p.id !== id));
   }
 
-  removeMany(ids: string[]) {
+  removeMany(ids: number[]) {
     const set = new Set(ids);
     this._list.update(arr => arr.filter(p => !set.has(p.id)));
   }
 
-  toggleFavorite(id: string) {
+  toggleFavorite(id: number) {
     this._list.update(arr =>
       arr.map(p => (p.id === id ? { ...p, favorite: !p.favorite } : p))
     );
   }
 
-  /** export CSV จาก list ปัจจุบัน */
   downloadCSV(rows: Project[]) {
     const header = ['id','name','updatedAt','tables','favorite'];
     const csv = [
@@ -59,9 +61,9 @@ export class ProjectsService {
     return needs ? `"${s.replace(/"/g, '""')}"` : s;
   }
 
-  rename(id: string, name: string) {
-  this._list.update(arr =>
-    arr.map(p => (p.id === id ? { ...p, name, updatedAt: new Date().toISOString() } : p))
-  );
-}
+  rename(id: number, name: string) {
+    this._list.update(arr =>
+      arr.map(p => (p.id === id ? { ...p, name, updatedAt: new Date().toISOString() } : p))
+    );
+  }
 }

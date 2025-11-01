@@ -15,7 +15,6 @@ import { FooterStateService } from '../../core/footer-state.service';
   styleUrl: './dashboard.css',
 })
 export class Dashboard implements AfterViewInit, OnDestroy {
-  /* ===== Footer overlap handling ===== */
   @ViewChild('pagerZone', { static: false }) pagerZone?: ElementRef<HTMLElement>;
 
   private updateFooterAvoidOverlap() {
@@ -26,7 +25,7 @@ export class Dashboard implements AfterViewInit, OnDestroy {
     const vpH = window.innerHeight;
     const pr = pager.getBoundingClientRect();
     const pillH = pill.offsetHeight || 48;
-    const bottomGap = 16;                  // = bottom-4
+    const bottomGap = 16;
     const pillTop = vpH - bottomGap - pillH;
     const pillBottom = pillTop + pillH;
 
@@ -42,12 +41,11 @@ export class Dashboard implements AfterViewInit, OnDestroy {
     this.pageSize.set(this.calcPageSize(window.innerHeight));
   };
 
-  // ปรับ footer ด้านล่าง
   ngAfterViewInit() {
     this.footer.setThreshold(720);
     setTimeout(() => {
       this.updateFooterAvoidOverlap();
-      this.pageSize.set(this.calcPageSize(window.innerHeight)); // เช็กครั้งแรก
+      this.pageSize.set(this.calcPageSize(window.innerHeight));
     }, 0);
 
     window.addEventListener('scroll', this.onScroll, { passive: true });
@@ -60,12 +58,11 @@ export class Dashboard implements AfterViewInit, OnDestroy {
     this.footer.resetAll();
   }
 
-  /* ===== Core state ===== */
   readonly Math = Math;
   keyword = signal('');
-  selected = signal<Set<string>>(new Set());
+  selected = signal<Set<number>>(new Set());
   asideOpen = signal(false);
-  menuOpenId = signal<string | null>(null);
+  menuOpenId = signal<number | null>(null);
   profileOpen = signal(false);
 
   projects = signal<Project[]>([]);
@@ -75,16 +72,9 @@ export class Dashboard implements AfterViewInit, OnDestroy {
     return q ? list.filter(p => p.name.toLowerCase().includes(q)) : list;
   });
 
-  /* ===== Dynamic page size by viewport height =====
-     - < 800px  ➜  5 items (เช่น notebook สูง ~740–760)
-     - ≥ 800px  ➜  8 items (จอพีซีปกติ)
-  */
-  private calcPageSize(h: number): number {
-    return h < 800 ? 5 : 8;
-  }
-  pageSize = signal<number>(this.calcPageSize(typeof window !== 'undefined' ? window.innerHeight : 900));
+  private calcPageSize(h: number): number { return h < 800 ? 5 : 8; }
+  pageSize = signal<number>(typeof window !== 'undefined' ? this.calcPageSize(window.innerHeight) : 8);
 
-  /* ===== Pagination ===== */
   pageIndex = signal(0);
   pageCount = computed(() => Math.max(1, Math.ceil(this.filtered().length / this.pageSize())));
   pages = computed(() => Array.from({ length: this.pageCount() }, (_, i) => i));
@@ -99,24 +89,15 @@ export class Dashboard implements AfterViewInit, OnDestroy {
     private footer: FooterStateService
   ) {
     effect(() => this.projects.set(this.svc.list()));
-
-    // เมื่อกรองผลเปลี่ยน ให้กลับหน้าแรก
-    effect(() => {
-      this.filtered();
-      this.pageIndex.set(0);
-    });
+    effect(() => { this.filtered(); this.pageIndex.set(0); });
   }
 
-  /* ===== Aside ===== */
   toggleAside() {
     const next = !this.asideOpen();
     this.asideOpen.set(next);
-    if (typeof document !== 'undefined') {
-      document.body.style.overflow = next ? 'hidden' : '';
-    }
+    if (typeof document !== 'undefined') document.body.style.overflow = next ? 'hidden' : '';
   }
 
-  /* ===== Global click / ESC ===== */
   @HostListener('document:click') onDocClick() {
     if (this.menuOpenId() !== null) this.menuOpenId.set(null);
     if (this.profileOpen()) this.profileOpen.set(false);
@@ -130,11 +111,13 @@ export class Dashboard implements AfterViewInit, OnDestroy {
     }
   }
 
-  /* ===== Project card menus ===== */
-  toggleMenu(id: string) { this.menuOpenId.update(cur => (cur === id ? null : id)); }
+  toggleMenu(id: number) { this.menuOpenId.update(cur => (cur === id ? null : id)); }
   closeMenu() { this.menuOpenId.set(null); }
-  openProject(id: string) { console.log('open project', id); this.closeMenu(); }
-  renameProject(id: string, currentName: string) {
+  openProject(id: number) {
+  this.router.navigate(['/projects', id]); 
+  this.closeMenu();
+}
+  renameProject(id: number, currentName: string){
     const next = window.prompt('Rename project:', currentName?.trim() ?? '');
     if (next != null) {
       const name = next.trim();
@@ -143,7 +126,6 @@ export class Dashboard implements AfterViewInit, OnDestroy {
     this.closeMenu();
   }
 
-  /* ===== Profile menu (top-right) ===== */
   toggleProfileMenu() {
     if (this.menuOpenId() !== null) this.menuOpenId.set(null);
     this.profileOpen.update(v => !v);
@@ -151,31 +133,28 @@ export class Dashboard implements AfterViewInit, OnDestroy {
   onEditProfile() { this.router.navigateByUrl('/profile/edit'); }
   onLogout() { this.router.navigateByUrl('/login'); }
 
-  /* ===== CRUD helpers ===== */
   addQuick(name: string) {
     if (!name.trim()) return;
     this.svc.add(name.trim());
     this.keyword.set('');
   }
-  isChecked(id: string) { return this.selected().has(id); }
-  toggleCheck(id: string, checked: boolean) {
+  isChecked(id: number) { return this.selected().has(id); }
+  toggleCheck(id: number, checked: boolean)  {
     this.selected.update(s => {
       const next = new Set(s);
       checked ? next.add(id) : next.delete(id);
       return next;
     });
   }
-  removeOne(id: string) { this.svc.remove(id); }
+  removeOne(id: number) { this.svc.remove(id); }
   removeManySelected() {
     const ids = Array.from(this.selected());
     if (ids.length) this.svc.removeMany(ids);
     this.selected.set(new Set());
   }
-  toggleFavorite(id: string) { this.svc.toggleFavorite(id); }
+  toggleFavorite(id: number) { this.svc.toggleFavorite(id); }
   exportCSV() { this.svc.downloadCSV(this.filtered()); }
-  toLocal(iso: string) { return new Date(iso).toLocaleDateString(); }
 
-  /* ===== Paging actions ===== */
   gotoPage(n: number) { if (n >= 0 && n < this.pageCount()) this.pageIndex.set(n); }
   nextPage() { const n = this.pageIndex() + 1; if (n < this.pageCount()) this.pageIndex.set(n); }
   prevPage() { const n = this.pageIndex() - 1; if (n >= 0) this.pageIndex.set(n); }
