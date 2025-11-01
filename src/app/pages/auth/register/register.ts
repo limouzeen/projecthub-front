@@ -16,9 +16,9 @@ export class Register implements OnInit, OnDestroy {
   ) {}
 
 
-   //  ตั้ง threshold เฉพาะหน้า Login: ย่อเมื่อสูง < 882px
+   //  ตั้ง threshold เฉพาะหน้า Login: ย่อเมื่อสูง < 675px
   ngOnInit(): void {
-    this.footer.setThreshold(882);
+    this.footer.setThreshold(675);
     this.footer.setForceCompact(null); // ให้ทำงานแบบ auto ตาม threshold
   }
 

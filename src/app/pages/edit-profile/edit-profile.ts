@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FooterStateService } from '../../core/footer-state.service';
 
+/* ===== Types ===== */
 type ProfileForm = {
   avatarFile: File | null;
   avatarPreview: string | null;
@@ -13,6 +14,9 @@ type ProfileForm = {
   confirmNewPassword: string;
 };
 
+type UpdateStatus = 'idle' | 'success' | 'error';
+
+/* ===== Component ===== */
 @Component({
   selector: 'app-edit-profile',
   standalone: true,
@@ -21,7 +25,9 @@ type ProfileForm = {
   styleUrl: './edit-profile.css',
 })
 export class EditProfile implements OnInit, OnDestroy {
-  // ===== state =====
+  /* -----------------------------
+   * State (signals)
+   * --------------------------- */
   readonly model = signal<ProfileForm>({
     avatarFile: null,
     avatarPreview: null,
@@ -32,53 +38,95 @@ export class EditProfile implements OnInit, OnDestroy {
     confirmNewPassword: '',
   });
 
-  showPw = signal(false);
-  saving = signal(false);
-  msg = signal<string | null>(null);
+  readonly saving = signal(false);
 
-  // ===== password strength (very simple client side) =====
-  strength = computed(() => {
+  // สถานะการอัปเดต (สำหรับแถบข้อความด้านซ้ายปุ่ม Save)
+  readonly status = signal<UpdateStatus>('idle');
+  readonly statusMessage = signal<string>('');
+
+  // สเตตสำหรับปุ่มตาแต่ละช่อง
+  readonly showCurrent = signal(false);
+  readonly showNew = signal(false);
+
+  /* -----------------------------
+   * Derived values
+   * --------------------------- */
+  readonly strength = computed(() => {
     const p = this.model().newPassword ?? '';
-    let score = 0;
-    if (p.length >= 8) score++;
-    if (/[A-Z]/.test(p)) score++;
-    if (/[a-z]/.test(p)) score++;
-    if (/[0-9]/.test(p)) score++;
-    if (/[^A-Za-z0-9]/.test(p)) score++;
-    return Math.min(score, 5); // 0..5
+    let s = 0;
+    if (p.length >= 8) s++;
+    if (/[A-Z]/.test(p)) s++;
+    if (/[a-z]/.test(p)) s++;
+    if (/[0-9]/.test(p)) s++;
+    if (/[^A-Za-z0-9]/.test(p)) s++;
+    return Math.min(s, 5); // 0..5
   });
 
-  strengthLabel = computed(() => {
-    const s = this.strength();
-    return ['Too weak', 'Weak', 'Fair', 'Good', 'Strong', 'Very strong'][s];
+  readonly strengthLabel = computed(() => {
+    return ['Too weak', 'Weak', 'Fair', 'Good', 'Strong', 'Very strong'][this.strength()];
   });
 
-  constructor(private footer: FooterStateService) {}
+  constructor(private readonly footer: FooterStateService) {}
 
-  // ให้ป้ายลิขสิทธิ์ย่อเมื่อจอเตี้ยจริง ๆ (เช่น < 900px)
+  /* -----------------------------
+   * Lifecycle
+   * --------------------------- */
   ngOnInit(): void {
-    this.footer.setThreshold(900);
+    // ให้ป้ายลิขสิทธิ์ย่อเมื่อจอเตี้ยจริง ๆ
+    this.footer.setThreshold(735);
     this.footer.setForceCompact(null); // auto ตาม threshold
   }
 
   ngOnDestroy(): void {
+    // เก็บกวาด URL เดิมถ้ายังมี
+    const prev = this.model().avatarPreview;
+    if (prev) URL.revokeObjectURL(prev);
     this.footer.resetAll();
   }
 
-  // ===== จัดการรูป =====
+  /* -----------------------------
+   * UI helpers
+   * --------------------------- */
+  toggleShowCurrent() { this.showCurrent.update(v => !v); }
+  toggleShowNew()     { this.showNew.update(v => !v); }
+
+  private setStatus(kind: UpdateStatus, message: string, autoClearMs = 4000) {
+    this.status.set(kind);
+    this.statusMessage.set(message);
+    if (autoClearMs > 0) {
+      window.clearTimeout((this as any).__statusTimer);
+      (this as any).__statusTimer = window.setTimeout(() => {
+        this.status.set('idle');
+        this.statusMessage.set('');
+      }, autoClearMs);
+    }
+  }
+
+  /* -----------------------------
+   * Form events
+   * --------------------------- */
+  onText<K extends keyof ProfileForm>(key: K, ev: Event) {
+    const value = (ev.target as HTMLInputElement).value as ProfileForm[K];
+    this.model.update(m => ({ ...m, [key]: value }));
+  }
+
   onPickAvatar(ev: Event) {
     const input = ev.target as HTMLInputElement;
     const file = input.files?.[0] ?? null;
     if (!file) return;
 
     if (!/^image\/(png|jpe?g|webp|gif)$/i.test(file.type)) {
-      this.msg.set('Please choose an image file (PNG, JPG, WEBP, GIF).');
+      this.setStatus('error', 'Please choose an image file (PNG, JPG, WEBP, GIF).');
       return;
     }
-    if (file.size > 2 * 1024 * 1024) { // 2MB
-      this.msg.set('Image is too large. Max 2 MB.');
+    if (file.size > 2 * 1024 * 1024) {
+      this.setStatus('error', 'Image is too large. Max 2 MB.');
       return;
     }
+
+    // ลบพรีวิวเก่า (ถ้ามี) ก่อนสร้างใหม่ เพื่อไม่ให้ leak
+    const prev = this.model().avatarPreview;
+    if (prev) URL.revokeObjectURL(prev);
 
     const url = URL.createObjectURL(file);
     this.model.update(m => ({ ...m, avatarFile: file, avatarPreview: url }));
@@ -90,59 +138,54 @@ export class EditProfile implements OnInit, OnDestroy {
     this.model.update(m => ({ ...m, avatarFile: null, avatarPreview: null }));
   }
 
+  /* -----------------------------
+   * Save
+   * --------------------------- */
   async save() {
-    this.msg.set(null);
+    // เคลียร์สถานะเดิม
+    this.setStatus('idle', '');
 
     const { displayName, email, currentPassword, newPassword, confirmNewPassword } = this.model();
 
-    // basic validations
-    if (!displayName.trim()) { this.msg.set('Please enter your name.'); return; }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { this.msg.set('Invalid email.'); return; }
+    // Basic validations
+    if (!displayName.trim()) {
+      this.setStatus('error', 'Please enter your name.');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      this.setStatus('error', 'Invalid email.');
+      return;
+    }
 
+    // ตั้งรหัสใหม่ (ถ้ากรอกมา)
     if (newPassword || confirmNewPassword) {
       if (newPassword !== confirmNewPassword) {
-        this.msg.set('New password and confirm password do not match.');
+        this.setStatus('error', 'New password and confirm password do not match.');
         return;
       }
       if (this.strength() < 3) {
-        this.msg.set('Please choose a stronger password (min 8 chars, mixed case, numbers, symbol).');
+        this.setStatus('error', 'Please choose a stronger password (min 8 chars, mixed case, numbers, symbol).');
         return;
       }
-      // ปกติควรให้กรอกรหัสเดิมเพื่อยืนยัน
       if (!currentPassword) {
-        this.msg.set('Please enter your current password to change password.');
+        this.setStatus('error', 'Please enter your current password to change password.');
         return;
       }
     }
 
-
+    // เริ่มบันทึก
     this.saving.set(true);
     try {
-      // TODO: เรียก API ของคุณที่นี่
-      // 1) ถ้าอัปโหลดรูป: ส่ง this.model().avatarFile เป็น multipart/form-data
-      // 2) ส่งชื่อ/อีเมล/รหัสตามฟิลด์ที่เปลี่ยน
+      // TODO: call API ของคุณที่นี่
+      // - แนบ this.model().avatarFile ถ้ามี
+      // - ส่งข้อมูลฟอร์มที่แก้ไข
 
       await new Promise(r => setTimeout(r, 900)); // mock delay
-      this.msg.set('Profile updated successfully.');
+      this.setStatus('success', 'Updated successfully');
     } catch (e: any) {
-      this.msg.set('Update failed. Please try again.');
+      this.setStatus('error', e?.message ?? 'Update failed. Please try again.');
     } finally {
       this.saving.set(false);
     }
   }
-
-
-  onText<K extends keyof ProfileForm>(key: K, ev: Event) {
-  const value = (ev.target as HTMLInputElement).value as ProfileForm[K];
-  this.model.update(m => {
-    
-    return { ...m, [key]: value } as ProfileForm;
-  });
-
-}
-
-toggleShowPw() {
-  this.showPw.update(v => !v);
-}
-
 }

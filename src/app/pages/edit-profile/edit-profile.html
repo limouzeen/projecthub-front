@@ -1,202 +1,225 @@
-<section class="min-h-[100svh] flex flex-col items-center justify-center px-4 py-10 relative">
+<section
+  class="min-h-[100svh] flex flex-col items-center justify-center px-4 py-6
+         pb-16 md:pb-20 lg:pb-24 relative"
+>
+
   <!-- ปุ่ม Back -->
-   <a routerLink="/"
+  <a routerLink="/"
      class="absolute left-6 top-6 inline-flex items-center gap-2 rounded-full bg-white/70 backdrop-blur-md
             border border-white/30 shadow-md px-3 py-1.5 text-slate-700 hover:scale-105 transition">
-    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6"
-      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none">
+      <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
     Back
   </a>
 
-
- <div class="w-full max-w-md relative z-10 animate-fade-in"></div>
-
-      <!-- โลโก้ + ชื่อ -->
-    <div class="flex items-center justify-center mb-6">
-      <img src="/assets/h_noname_logo.png" alt="ProjectHub"
-           class="w-14 h-14 rounded-xl shadow-md mr-3 animate-float object-cover" />
-      <div class="text-left">
-        <div class="text-xl font-bold text-slate-900 leading-tight">Edit Profile</div>
-        <div class="text-xs text-slate-500 -mt-0.5">Manage your Profile & Password</div>
-      </div>
+  <!-- หัวข้อ -->
+  <div class="flex items-center justify-center mb-4">
+    <img src="/assets/h_noname_logo.png" alt="ProjectHub"
+         class="w-12 h-12 rounded-xl shadow-md mr-3 object-cover" />
+    <div class="text-left">
+      <div class="text-lg font-bold text-slate-900 leading-tight">Edit Profile</div>
+      <div class="text-xs text-slate-500 -mt-0.5">Manage your Profile & Password</div>
     </div>
-
-
+  </div>
 
   <!-- Card -->
- 
-<div class="glass max-w-xl w-full p-6 sm:p-8 rounded-3xl relative">
- 
-  <!-- โซน Avatar -->
-  <div class="flex items-center gap-4 mb-8">
-    <div class="relative">
-     @if (model().avatarPreview) {
-  <img
-    [src]="model().avatarPreview!"
-    class="w-20 h-20 rounded-full ring-2 ring-white/70 object-cover shadow-sm"
-    alt="avatar" />
-} @else {
-  <img src="/assets/ph_profile.png"
-     class="relative w-20 h-20 rounded-full object-cover shadow-md
-            ring-5 ring-offset-[2px] ring-offset-white/10 ring-white/70 group-hover:ring-cyan-300/70 transition-all duration-500" />
+  <div class="glass max-w-lg w-full p-5 sm:p-6 rounded-3xl relative overflow-visible max-h-none">
+    <!-- Avatar -->
+    <div class="flex items-center gap-4 mb-5">
+      <div class="relative">
+        @if (model().avatarPreview) {
+          <img [src]="model().avatarPreview!" class="w-16 h-16 rounded-full object-cover shadow-md" alt="avatar" />
+        } @else {
+          <img src="/assets/ph_profile.png" class="w-16 h-16 rounded-full object-cover shadow-md" alt="avatar" />
+        }
+        <label class="absolute -bottom-1 -right-1 cursor-pointer">
+          <input type="file" accept="image/*" class="hidden" (change)="onPickAvatar($event)" />
+          <span class="inline-flex items-center justify-center w-6 h-6 rounded-full
+                       bg-gradient-to-r from-indigo-600 to-cyan-500 text-white shadow-xl">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
+          </span>
+        </label>
+      </div>
 
-}
-
-
-      <!-- ปุ่มอัปโหลด -->
-      <label class="absolute -bottom-1 -right-1 cursor-pointer">
-        <input type="file" accept="image/*" class="hidden" (change)="onPickAvatar($event)" />
-        <span
-          class="inline-flex items-center justify-center w-6 h-6 rounded-full
-                 bg-gradient-to-r from-indigo-600 to-cyan-500 text-white shadow-xl hover:scale-105 transition">
-          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 5v14M5 12h14"/>
-          </svg>
-        </span>
-      </label>
+      <div class="flex flex-col gap-1.5">
+        <button class="btn-ghost-enhance !px-3.5 !py-1.5 text-sm" (click)="removeAvatar()" type="button">
+          Remove photo
+        </button>
+        <div class="text-[11px] text-slate-500">PNG/JPG/WEBP up to 2MB</div>
+      </div>
     </div>
 
-    <div class="flex flex-col gap-2">
-      <button class="btn-ghost-enhance !px-4 !py-2" (click)="removeAvatar()" type="button">
-        Remove photo
-      </button>
-      <div class="text-xs text-slate-500">PNG/JPG/WEBP up to 2MB</div>
-    </div>
-  </div>
-
-  <!-- ฟอร์ม (อินพุตสไตล์เดียวกับ Register: .input + label เล็ก) -->
-  <form class="space-y-5">
-    <div>
-      <label class="text-sm text-slate-600">Display name</label>
-      <input
-        class="input mt-1"
-        [value]="model().displayName"
-        (input)="onText('displayName', $event)"
-        placeholder="Your name" />
-    </div>
-
-    <div>
-      <label class="text-sm text-slate-600">Email</label>
-      <input
-        class="input mt-1" type="email"
-        [value]="model().email"
-        (input)="onText('email', $event)"
-        placeholder="you@example.com" />
-    </div>
-
-
-
-
-<!-- Current password -->
-<div>
-  <label class="text-sm text-slate-600">Current password</label>
-
-  <div class="relative">
-    <input
-      class="input mt-1 pr-12"
-      [type]="showPw() ? 'text' : 'password'"
-      [value]="model().currentPassword"
-      (input)="onText('currentPassword', $event)"
-      [placeholder]="showPw() ? 'Current password' : '••••••••'"
-      autocomplete="current-password"
-      autocapitalize="off"
-      spellcheck="false" />
-
-    <!-- ปุ่มตาแบบกลืน ไม่มีวงตอนคลิก -->
-    <button
-      type="button"
-      (click)="toggleShowPw()"
-      class="absolute inset-y-0 right-2 my-[6px] p-2 rounded-full
-             text-slate-500/80 hover:text-slate-700
-             hover:bg-white/55 backdrop-blur-md
-             transition active:scale-95 focus:outline-none select-none"
-      [attr.aria-pressed]="showPw()"
-      [title]="showPw() ? 'Hide password' : 'Show password'">
-
-      @if (showPw()) {
-        <!-- eye-off -->
-        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20C5 20 2 12 2 12a19.7 19.7 0 0 1 4.17-5.17"/>
-          <path d="M10.58 10.58a3 3 0 1 0 4.24 4.24"/>
-          <path d="M1 1l22 22"/>
-        </svg>
-      } @else {
-        <!-- eye -->
-        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/>
-          <circle cx="12" cy="12" r="3"/>
-        </svg>
-      }
-    </button>
-  </div>
-</div>
-
-    <div class="grid sm:grid-cols-2 gap-4">
+    <!-- Form -->
+    <form class="space-y-4">
       <div>
-        <label class="text-sm text-slate-600">New password</label>
-        
-        <input
-          class="input mt-1"
-          [type]="showPw() ? 'text' : 'password'"
-          [value]="model().newPassword"
-          (input)="onText('newPassword', $event)"
-          placeholder="At least 8 characters" />
+        <label class="text-sm text-slate-600">Display name</label>
+        <input class="input mt-1" [value]="model().displayName" (input)="onText('displayName', $event)" placeholder="Your name" />
+      </div>
 
-        <!-- แถบความแข็งแรง -->
-        <div class="mt-2 h-2 rounded-full bg-slate-200 overflow-hidden">
-          <div class="h-full transition-all"
-               [style.width.%]="(strength() / 5) * 100"
-               [class]="{
-                 'bg-rose-400'  : strength() <= 1,
-                 'bg-amber-400' : strength() === 2,
-                 'bg-yellow-400': strength() === 3,
-                 'bg-lime-500'  : strength() === 4,
-                 'bg-emerald-500': strength() >= 5
-               }">
-          </div>
+      <div>
+        <label class="text-sm text-slate-600">Email</label>
+        <input class="input mt-1" type="email" [value]="model().email" (input)="onText('email', $event)" placeholder="you@example.com" />
+      </div>
+
+      <!-- Current password (ตา #1) -->
+      <div>
+        <label class="text-sm text-slate-600">Current password</label>
+        <div class="relative">
+          <input
+            class="input mt-1 pr-12"
+            [type]="showCurrent() ? 'text' : 'password'"
+            [value]="model().currentPassword"
+            (input)="onText('currentPassword', $event)"
+            [placeholder]="showCurrent() ? 'Current password' : '••••••••'"
+            autocomplete="current-password" autocapitalize="off" spellcheck="false" />
+
+          <button type="button"
+                  (click)="toggleShowCurrent()"
+                  class="absolute inset-y-0 right-2 my-[6px] p-2 rounded-full
+                         text-slate-500/80 hover:text-slate-700 hover:bg-white/55 transition
+                         active:scale-95 focus:outline-none select-none"
+                  [attr.aria-pressed]="showCurrent()"
+                  [title]="showCurrent() ? 'Hide password' : 'Show password'">
+            @if (showCurrent()) {
+              <!-- eye-off -->
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20C5 20 2 12 2 12a19.7 19.7 0 0 1 4.17-5.17"/>
+                <path d="M10.58 10.58a3 3 0 1 0 4.24 4.24"/>
+                <path d="M1 1l22 22"/>
+              </svg>
+            } @else {
+              <!-- eye -->
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            }
+          </button>
         </div>
-        <div class="text-xs text-slate-500 mt-1">{{ strengthLabel() }}</div>
       </div>
 
-      <div>
-        <label class="text-sm text-slate-600">Confirm new password</label>
-        <input
-          class="input mt-1"
-          [type]="showPw() ? 'text' : 'password'"
-          [value]="model().confirmNewPassword"
-          (input)="onText('confirmNewPassword', $event)"
-          placeholder="Re-enter new password" />
+      <!-- New/Confirm password -->
+      <div class="grid sm:grid-cols-2 gap-3">
+        <!-- New password (ตา #2 แยกสเตต) -->
+        <div>
+          <label class="text-sm text-slate-600">New password</label>
+          <div class="relative">
+            <input
+              class="input mt-1 pr-12"
+              [type]="showNew() ? 'text' : 'password'"
+              [value]="model().newPassword"
+              (input)="onText('newPassword', $event)"
+              placeholder="At least 8 characters" />
+
+            <button type="button"
+                    (click)="toggleShowNew()"
+                    class="absolute inset-y-0 right-2 my-[6px] p-2 rounded-full
+                           text-slate-500/80 hover:text-slate-700 hover:bg-white/55 transition
+                           active:scale-95 focus:outline-none select-none"
+                    [attr.aria-pressed]="showNew()"
+                    [title]="showNew() ? 'Hide password' : 'Show password'">
+              @if (showNew()) {
+                <!-- eye-off -->
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20C5 20 2 12 2 12a19.7 19.7 0 0 1 4.17-5.17"/>
+                  <path d="M10.58 10.58a3 3 0 1 0 4.24 4.24"/>
+                  <path d="M1 1l22 22"/>
+                </svg>
+              } @else {
+                <!-- eye -->
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              }
+            </button>
+          </div>
+
+          <!-- strength bar -->
+          <div class="mt-1.5 h-2 rounded-full bg-slate-200 overflow-hidden">
+            <div class="h-full transition-all"
+                 [style.width.%]="(strength() / 5) * 100"
+                 [class]="{
+                   'bg-rose-400'  : strength() <= 1,
+                   'bg-amber-400' : strength() === 2,
+                   'bg-yellow-400': strength() === 3,
+                   'bg-lime-500'  : strength() === 4,
+                   'bg-emerald-500': strength() >= 5
+                 }">
+            </div>
+          </div>
+          <div class="text-[11px] text-slate-500 mt-1">{{ strengthLabel() }}</div>
+        </div>
+
+        <!-- Confirm new password -->
+        <div>
+          <label class="text-sm text-slate-600">Confirm new password</label>
+          <input
+            class="input mt-1"
+            [type]="showNew() ? 'text' : 'password'" 
+            [value]="model().confirmNewPassword"
+            (input)="onText('confirmNewPassword', $event)"
+            placeholder="Re-enter new password" />
+        </div>
       </div>
+
+      <!-- Status + Actions (inline) -->
+<div class="pt-2">
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+
+    <!-- ซ้าย: กล่องสถานะ (แสดงเมื่อมีสถานะเท่านั้น) -->
+    <div class="flex-1 min-w-0">
+      @if (status() !== 'idle') {
+        <div
+          class="rounded-xl px-3 py-2 text-sm border inline-flex items-center gap-2 max-w-full"
+          role="status" aria-live="polite"
+          [ngClass]="{
+            'bg-emerald-50/80 text-emerald-700 border-emerald-200': status() === 'success',
+            'bg-rose-50/80 text-rose-700 border-rose-200':         status() === 'error'
+          }"
+        >
+          <!-- ไอคอน -->
+          @if (status() === 'success') {
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          } @else {
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 9v4m0 4h.01M12 2a10 10 0 110 20 10 10 0 010-20z" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          }
+
+          <!-- ข้อความ -->
+          <span class="truncate">
+            {{ statusMessage() }}
+          </span>
+        </div>
+      }
     </div>
 
-    <!-- แจ้งเตือน -->
-    @if (msg()) {
-  <div class="rounded-xl bg-white/70 border border-slate-200 px-4 py-2 text-sm text-slate-700">
-    {{ msg() }}
-  </div>
-}
+    <!-- ขวา: ปุ่ม -->
+    <div class="flex gap-3 justify-end shrink-0">
+      <button
+        class="btn-primary-enhance"
+        [disabled]="saving()"
+        type="button"
+        (click)="save()">
+        @if (!saving()) { <span>Save changes</span> } @else { <span>Saving...</span> }
+      </button>
 
-   <!-- ปุ่ม -->
-<div class="pt-2">
-  <div class="flex flex-col sm:flex-row gap-3 justify-end items-stretch sm:items-end">
-    <button
-      class="btn-primary-enhance w-full sm:w-auto"
-      [disabled]="saving()"
-      type="button"
-      (click)="save()">
-      @if (!saving()) { <span>Save changes</span> } @else { <span>Saving...</span> }
-    </button>
+      <a class="btn-ghost-enhance text-center">Cancel</a>
+    </div>
 
-    <a class="btn-ghost-enhance w-full sm:w-auto text-center">
-      Cancel
-    </a>
   </div>
 </div>
 
-  </form>
-</div>
-
-  
+    </form>
+  </div>
 </section>

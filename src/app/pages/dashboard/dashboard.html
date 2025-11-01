@@ -123,13 +123,15 @@
       </div>
     </div>
   }
+
+
 </div>
 
     </div>
   </div>
 
   <!-- Actions bar (มินิมอล) -->
-  <div class="max-w-6xl mx-auto w-full px-4 pt-10 mb-3">
+  <div class="max-w-6xl mx-auto w-full px-4 pt-5 mb-1">
     <div class="flex items-center gap-2">
       <!-- New Project = ปุ่มหลักแบบ gradient -->
       <button class="btn-primary-enhance" (click)="addQuick('New Project')">New Project</button>
@@ -342,11 +344,9 @@
     <!-- Summary -->
     <div class="text-xs sm:text-sm text-slate-600">
       Showing
-      {{ pageIndex() * pageSize + (filtered().length ? 1 : 0) }}
-      –
-      {{ Math.min((pageIndex() + 1) * pageSize, filtered().length) }}
-      of
-      {{ filtered().length }}
+      {{ pageIndex() * pageSize() + (filtered().length ? 1 : 0) }}
+      -
+{{ Math.min((pageIndex() + 1) * pageSize(), filtered().length) }}
     </div>
 
     <!-- Controls -->

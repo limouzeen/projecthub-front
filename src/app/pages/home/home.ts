@@ -17,7 +17,7 @@ export class Home implements OnInit, OnDestroy {
   ) {}
    //  ตั้ง threshold เฉพาะหน้า Login: ย่อเมื่อสูง < 806px
   ngOnInit(): void {
-    this.footer.setThreshold(806);
+    this.footer.setThreshold(600);
     this.footer.setForceCompact(null); // ให้ทำงานแบบ auto ตาม threshold
   }
 
